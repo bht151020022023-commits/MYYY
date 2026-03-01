@@ -3,18 +3,19 @@
 <meta charset="UTF-8">
 <title>Private Button</title>
 
-<body style="font-family:sans-serif;text-align:center;margin-top:40px">
-
-<h2>Đăng nhập</h2>
+<body id="body" style="display:none;font-family:sans-serif;text-align:center;margin-top:40px">
 
 <div id="loginBox">
+  <h2>Đăng nhập</h2>
   <input id="email" placeholder="Email"><br><br>
   <input id="pass" type="password" placeholder="Password"><br><br>
   <button id="login">Đăng nhập</button>
+  <p id="msg"></p>
 </div>
 
 <div id="appBox" style="display:none;margin-top:30px">
   <h3>Xin chào chủ nhân 👑</h3>
+
   <button id="btn" style="background:red;color:#fff;padding:15px 30px;border:0;border-radius:8px;font-size:18px">
   NHẤN NÚT
   </button>
@@ -22,8 +23,6 @@
   <p>Tổng số lần: <b id="count">0</b></p>
   <div id="log"></div>
 </div>
-
-<p id="msg"></p>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -53,6 +52,7 @@ const firebaseConfig={
   appId:"1:39799731758:web:c122d39770a67b21bb91bf"
 };
 
+/* 🔐 EMAIL DUY NHẤT ĐƯỢC PHÉP */
 const OWNER="15102002@gmail.com";
 
 const app=initializeApp(firebaseConfig);
@@ -66,9 +66,11 @@ login.onclick=()=>{
   .catch(()=>msg.innerText="Sai tài khoản hoặc mật khẩu");
 };
 
-/* CHECK USER */
+/* CHECK LOGIN */
 onAuthStateChanged(auth,u=>{
+
   if(!u){
+    body.style.display="block";
     loginBox.style.display="block";
     appBox.style.display="none";
     return;
@@ -76,16 +78,17 @@ onAuthStateChanged(auth,u=>{
 
   if(u.email!==OWNER){
     signOut(auth);
-    msg.innerText="Không có quyền truy cập";
+    alert("Bạn không có quyền truy cập");
     return;
   }
 
+  /* ĐÚNG USER */
+  body.style.display="block";
   loginBox.style.display="none";
   appBox.style.display="block";
-  msg.innerText="Đăng nhập thành công";
 });
 
-/* BUTTON SAVE FIRESTORE */
+/* BUTTON SAVE */
 btn.onclick=()=>addDoc(col,{time:new Date().toLocaleString()});
 
 /* LOAD REALTIME */
