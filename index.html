@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<meta charset="UTF-8">
+<title>Login Test</title>
+
+<body style="font-family:sans-serif;text-align:center;margin-top:60px">
+
+<h2>Đăng nhập Firebase</h2>
+
+<input id="email" type="email" placeholder="Email"><br><br>
+<input id="pass" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Đăng nhập</button>
+
+<p id="msg"></p>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{
+getAuth,
+signInWithEmailAndPassword,
+onAuthStateChanged
+}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyA3zv14xu7Dr4E5Th_C8nFfEQoph4jrxfi",
+  authDomain:"ccc1-fc481.firebaseapp.com",
+  projectId:"ccc1-fc481",
+  storageBucket:"ccc1-fc481.firebasestorage.app",
+  messagingSenderId:"39799731758",
+  appId:"1:39799731758:web:c122d39770a67b21bb91bf"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+
+window.login=()=>{
+  const e=document.getElementById("email").value.trim();
+  const p=document.getElementById("pass").value.trim();
+
+  if(!e||!p){
+    msg.innerText="Nhập email và mật khẩu";
+    return;
+  }
+
+  signInWithEmailAndPassword(auth,e,p)
+  .then(()=>msg.innerText="Đăng nhập thành công ✅")
+  .catch(err=>{
+    console.log(err);
+    msg.innerText="Sai email hoặc mật khẩu";
+  });
+};
+
+onAuthStateChanged(auth,u=>{
+  if(u) console.log("Đã login:",u.email);
+});
+</script>
+
+</body>
+</html>
